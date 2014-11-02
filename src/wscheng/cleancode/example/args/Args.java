@@ -9,9 +9,9 @@ public class Args {
     private String[] args;
     private boolean valid;
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
-    private Map<Character, ArgumentMarshaler> booleanArgs = new HashMap<Character, ArgumentMarshaler>();
+    private Map<Character, Boolean> booleanArgs = new HashMap<Character, Boolean>();
     //
-    private Map<Character, ArgumentMarshaler> stringArgs = new HashMap<Character, ArgumentMarshaler>();
+    private Map<Character, String> stringArgs = new HashMap<Character, String>();
     private Set<Character> argsFound = new HashSet<Character>();
     private int currentArgument;
 
@@ -44,7 +44,6 @@ public class Args {
 
     private boolean parseSchema() throws ParseException {
         for (String element : schema.split(",")) {
-            //
             if (element.length() > 0) {
                 String trimmedElement = element.trim();
                 parseSchemaElement(trimmedElement);
@@ -65,18 +64,18 @@ public class Args {
         }
     }
 
+    private boolean isBooleanSchemaElement(String elementTail) {
+        return elementTail.length() == 0;
+    }
+
     private void validateSchemaElementId(char elementId) throws ParseException {
         if (!Character.isLetter(elementId)) {
             throw new ParseException("Bad character:" + elementId + "in Args format: " + schema, 0);
         }
     }
 
-    private boolean isBooleanSchemaElement(String elementTail) {
-        return elementTail.length() == 0;
-    }
-
     private void parseBooleanSchemaElement(char elementId) {
-        booleanArgs.put(elementId, new BooleanArgumentMarshaler());
+        booleanArgs.put(elementId, false);
     }
 
     private boolean isStringSchemaElement(String elementTail) {
@@ -84,7 +83,8 @@ public class Args {
     }
 
     private void parseStringSchemaElement(char elementId) {
-        stringArgs.put(elementId, new StringArgumentMarshaler());
+        // TODO Auto-generated method stub
+        stringArgs.put(elementId, "");
     }
 
     private boolean parseArguments() {
@@ -121,14 +121,12 @@ public class Args {
             setBooleanArg(argChar, true);
         } else if (isString(argChar)) {
             setStringArg(argChar, "");
-        } else
-            set = false;
+        } else set = false;
         return set;
     }
 
     private void setBooleanArg(char argChar, boolean value) {
-        // NPE? don't need, has already run isBoolean
-        booleanArgs.get(argChar).setBoolean(value);
+        booleanArgs.put(argChar, value);
     }
 
     private boolean isBoolean(char argChar) {
@@ -142,7 +140,7 @@ public class Args {
     private void setStringArg(char argChar, String s) {
         currentArgument++;
         try {
-            stringArgs.get(argChar).setString(args[currentArgument]);
+            stringArgs.put(argChar, args[currentArgument]);
         } catch (ArrayIndexOutOfBoundsException e) {
             valid = false;
             errorArgument = argChar;
@@ -164,7 +162,7 @@ public class Args {
 
     public String errorMessage() throws Exception {
         if (unexpectedArguments.size() > 0) {
-            return unexpectedArgumentMessage();
+            return unexpetecArgumentMessage();
         } else {
             switch (errorCode) {
                 case MISSING_STRING:
@@ -176,7 +174,7 @@ public class Args {
         return "";
     }
 
-    private String unexpectedArgumentMessage() {
+    private String unexpetecArgumentMessage() {
         StringBuffer message = new StringBuffer("Argument(s) =");
         for (char c : unexpectedArguments) {
             message.append(c);
@@ -186,51 +184,18 @@ public class Args {
     }
 
     public boolean getBoolean(char arg) {
-        // NPE
-        //return falseIfNull(booleanArgs.get(arg).getBoolean());
-        ArgumentMarshaler am = booleanArgs.get(arg);
-        return am != null && am.getBoolean();
+        return falseIfNull(booleanArgs.get(arg));
     }
 
     private boolean falseIfNull(Boolean b) {
         return b == null ? false : b;
     }
 
-    public String getString(char arg) {
-        ArgumentMarshaler am = stringArgs.get(arg);
-        return am == null ? "" : am.getString();
+    public String getString(char c) {
+        return blankIfNUll(stringArgs.get(c));
     }
 
-    private class ArgumentMarshaler {
-        private boolean booleanValue = false;
-        private String stringValue;
-
-        public void setBoolean(boolean value) {
-            booleanValue = value;
-        }
-
-        private boolean getBoolean() {
-            return booleanValue;
-        }
-
-        public void setString(String s) {
-            stringValue = s;
-        }
-
-        public String getString() {
-            return stringValue == null ? "" : stringValue;
-        }
-    }
-
-    private class BooleanArgumentMarshaler extends ArgumentMarshaler {
-
-    }
-
-    private class StringArgumentMarshaler extends ArgumentMarshaler {
-
-    }
-
-    private class IntegerArgumentMarshaler extends ArgumentMarshaler {
-
+    private String blankIfNUll(String s) {
+        return s == null ? "" : s;
     }
 }
