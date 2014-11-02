@@ -8,6 +8,16 @@ public class ArgsTest extends TestCase {
         assertEquals(0, args.cardinality());
     }
 
+    public void testCardinality() throws Exception {
+        Args args = new Args("b,c,d", new String[] {"-b", "-c", "-d"});
+        assertEquals(3, args.cardinality());
+    }
+
+    public void testBooleanStringCardinality() throws Exception {
+        Args args = new Args("b,c,d*", new String[] {"-b", "-c", "-d", "test"});
+        assertEquals(3, args.cardinality());
+    }
+
     public void testOneBooleanArguments() throws Exception {
         Args args = new Args("b", new String[] {"-b"});
         assertEquals(true, args.getBoolean('b'));

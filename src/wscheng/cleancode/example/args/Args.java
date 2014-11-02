@@ -14,9 +14,7 @@ public class Args {
     private Map<Character, String> stringArgs = new HashMap<Character, String>();
     private Set<Character> argsFound = new HashSet<Character>();
     private int currentArgument;
-    //
-    private int numberOfArguments = 0;
-    //
+
     private char errorArgument = '\0';
 
     enum ErrorCode {
@@ -151,7 +149,7 @@ public class Args {
     }
 
     public int cardinality() {
-        return numberOfArguments;
+        return argsFound.size();
     }
 
     public String usage() {
