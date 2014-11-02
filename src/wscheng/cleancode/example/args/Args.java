@@ -57,7 +57,6 @@ public class Args {
         if (isBooleanSchemaElement(elementTail)) {
             parseBooleanSchemaElement(elementId);
         } else if (isStringSchemaElement(elementTail)) {
-            System.out.println("isStringSchemaElement=" + elementId);
             parseStringSchemaElement(elementId);
         }
     }
@@ -94,7 +93,6 @@ public class Args {
 
     private void parseArgument(String arg) {
         if (arg.startsWith("-")) {
-            System.out.println(arg);
             parseElements(arg);
         }
     }
@@ -185,11 +183,8 @@ public class Args {
     }
 
     public boolean getBoolean(char arg) {
-        return falseIfNull(booleanArgs.get(arg).getBoolean());
-    }
-
-    private boolean falseIfNull(Boolean b) {
-        return b == null ? false : b;
+        ArgumentMarshaler am = booleanArgs.get(arg);
+        return am != null && am.getBoolean();
     }
 
     public String getString(char c) {
