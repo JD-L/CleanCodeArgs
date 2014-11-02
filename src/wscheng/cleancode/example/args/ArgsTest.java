@@ -20,4 +20,27 @@ public class ArgsTest extends TestCase {
         // will get NPE
         // assertEquals(false, args.getBoolean('d'));
     }
+
+    public void testOneStringArguments() throws Exception {
+        String testString = "my test String";
+        Args args = new Args("b*", new String[] {"-b", testString});
+        assertEquals(testString, args.getString('b'));
+    }
+
+    public void testTwoStringArguments() throws Exception {
+        String testString1 = "my test String1";
+        String testString2 = "my test String2";
+        Args args = new Args("b*,c*", new String[] {"-b", testString1, "-c", testString2});
+        assertEquals(testString1, args.getString('b'));
+        assertEquals(testString2, args.getString('c'));
+    }
+
+    public void testTwoStringOneBooleanArguments() throws Exception {
+        String testString1 = "my test String1";
+        String testString2 = "my test String2";
+        Args args = new Args("b*,c*,d", new String[] {"-b", testString1, "-c", testString2, "-d"});
+        assertEquals(testString1, args.getString('b'));
+        assertEquals(testString2, args.getString('c'));
+        assertEquals(true, args.getBoolean('d'));
+    }
 }
