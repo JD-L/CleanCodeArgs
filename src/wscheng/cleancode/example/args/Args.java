@@ -4,16 +4,14 @@ import java.text.ParseException;
 import java.util.*;
 
 public class Args {
-
     private String schema;
     private String[] args;
     private boolean valid;
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
-    private Map<Character, Boolean> booleanArgs = new HashMap<Character, Boolean>();
+    private Map<Character, ArgumentMarshaler> booleanArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, String> stringArgs = new HashMap<Character, String>();
     private Set<Character> argsFound = new HashSet<Character>();
     private int currentArgument;
-
     private char errorArgument = '\0';
 
     enum ErrorCode {
@@ -74,7 +72,7 @@ public class Args {
     }
 
     private void parseBooleanSchemaElement(char elementId) {
-        booleanArgs.put(elementId, false);
+        booleanArgs.put(elementId, new BooleanArgumentMarshaler());
     }
 
     private boolean isStringSchemaElement(String elementTail) {
@@ -118,6 +116,8 @@ public class Args {
         if (isBoolean(argChar)) {
             setBooleanArg(argChar, true);
         } else if (isString(argChar)) {
+            // the passing parameter "" is never used, we get the real String Arguments by adding argument counter
+            // in setStringArg()
             setStringArg(argChar, "");
         } else set = false;
         return set;
@@ -128,7 +128,8 @@ public class Args {
     }
 
     private void setBooleanArg(char argChar, boolean value) {
-        booleanArgs.put(argChar, value);
+        // NPE? won't happen, has already run isBoolean; But, does this violate the law of Demeter?
+        booleanArgs.get(argChar).setBoolean(value);
     }
 
     private boolean isString(char argChar) {
@@ -182,7 +183,7 @@ public class Args {
     }
 
     public boolean getBoolean(char arg) {
-        return falseIfNull(booleanArgs.get(arg));
+        return falseIfNull(booleanArgs.get(arg).getBoolean());
     }
 
     private boolean falseIfNull(Boolean b) {
@@ -195,5 +196,28 @@ public class Args {
 
     private String blankIfNUll(String s) {
         return s == null ? "" : s;
+    }
+
+    private class ArgumentMarshaler {
+        private boolean booleanValue = false;
+        private String stringValue;
+
+        public void setBoolean(boolean value) {
+            booleanValue = value;
+        }
+
+        private boolean getBoolean() {
+            return booleanValue;
+        }
+    }
+    // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
+    // Because we couldn't call it.
+    private class BooleanArgumentMarshaler extends ArgumentMarshaler {
+    }
+
+    private class StringArgumentMarshaler extends ArgumentMarshaler {
+    }
+
+    private class IntegerArgumentMarshaler extends ArgumentMarshaler {
     }
 }
