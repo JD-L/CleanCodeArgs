@@ -13,6 +13,11 @@ public class ArgsTest extends TestCase {
         assertEquals(3, args.cardinality());
     }
 
+    public void testBooleanStringCardinality() throws Exception {
+        Args args = new Args("b,c,d*", new String[] {"-b", "-c", "-d", "test"});
+        assertEquals(3, args.cardinality());
+    }
+
     public void testOneBooleanArguments() throws Exception {
         Args args = new Args("b", new String[] {"-b"});
         assertEquals(true, args.getBoolean('b'));
@@ -22,8 +27,29 @@ public class ArgsTest extends TestCase {
         Args args = new Args("b,c", new String[] {"-b", "-c"});
         assertEquals(true, args.getBoolean('b'));
         assertEquals(true, args.getBoolean('c'));
-        // will get NPE
-        // assertEquals(false, args.getBoolean('d'));
+        assertEquals(false, args.getBoolean('d'));
     }
 
+    public void testOneStringArguments() throws Exception {
+        String testString = "my test String";
+        Args args = new Args("b*", new String[] {"-b", testString});
+        assertEquals(testString, args.getString('b'));
+    }
+
+    public void testTwoStringArguments() throws Exception {
+        String testString1 = "my test String1";
+        String testString2 = "my test String2";
+        Args args = new Args("b*,c*", new String[] {"-b", testString1, "-c", testString2});
+        assertEquals(testString1, args.getString('b'));
+        assertEquals(testString2, args.getString('c'));
+    }
+
+    public void testTwoStringOneBooleanArguments() throws Exception {
+        String testString1 = "my test String1";
+        String testString2 = "my test String2";
+        Args args = new Args("b*,c*,d", new String[] {"-b", testString1, "-c", testString2, "-d"});
+        assertEquals(testString1, args.getString('b'));
+        assertEquals(testString2, args.getString('c'));
+        assertEquals(true, args.getBoolean('d'));
+    }
 }
