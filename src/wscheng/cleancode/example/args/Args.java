@@ -183,11 +183,8 @@ public class Args {
     }
 
     public boolean getBoolean(char arg) {
-        return falseIfNull(booleanArgs.get(arg).getBoolean());
-    }
-
-    private boolean falseIfNull(Boolean b) {
-        return b == null ? false : b;
+        ArgumentMarshaler am = booleanArgs.get(arg);
+        return am != null && am.getBoolean();
     }
 
     public String getString(char c) {
