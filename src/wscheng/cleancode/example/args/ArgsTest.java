@@ -27,7 +27,6 @@ public class ArgsTest extends TestCase {
         Args args = new Args("b,c", new String[] {"-b", "-c"});
         assertEquals(true, args.getBoolean('b'));
         assertEquals(true, args.getBoolean('c'));
-        // will get NPE
         assertEquals(false, args.getBoolean('d'));
     }
 
@@ -43,7 +42,6 @@ public class ArgsTest extends TestCase {
         Args args = new Args("b*,c*", new String[] {"-b", testString1, "-c", testString2});
         assertEquals(testString1, args.getString('b'));
         assertEquals(testString2, args.getString('c'));
-        assertEquals("", args.getString('d'));
     }
 
     public void testTwoStringOneBooleanArguments() throws Exception {

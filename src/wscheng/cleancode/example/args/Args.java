@@ -61,14 +61,14 @@ public class Args {
         }
     }
 
-    private boolean isBooleanSchemaElement(String elementTail) {
-        return elementTail.length() == 0;
-    }
-
     private void validateSchemaElementId(char elementId) throws ParseException {
         if (!Character.isLetter(elementId)) {
             throw new ParseException("Bad character:" + elementId + "in Args format: " + schema, 0);
         }
+    }
+
+    private boolean isBooleanSchemaElement(String elementTail) {
+        return elementTail.length() == 0;
     }
 
     private void parseBooleanSchemaElement(char elementId) {
@@ -123,13 +123,13 @@ public class Args {
         return set;
     }
 
+    private boolean isBoolean(char argChar) {
+        return booleanArgs.containsKey(argChar);
+    }
+
     private void setBooleanArg(char argChar, boolean value) {
         // NPE? won't happen, has already run isBoolean; But, does this violate the law of Demeter?
         booleanArgs.get(argChar).setBoolean(value);
-    }
-
-    private boolean isBoolean(char argChar) {
-        return booleanArgs.containsKey(argChar);
     }
 
     private boolean isString(char argChar) {
