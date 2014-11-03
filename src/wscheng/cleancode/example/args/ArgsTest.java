@@ -52,4 +52,15 @@ public class ArgsTest extends TestCase {
         assertEquals(testString2, args.getString('c'));
         assertEquals(true, args.getBoolean('d'));
     }
+
+    public void testTwoStringOneBooleanOneIntegerArguments() throws Exception {
+        String testString1 = "my test String1";
+        String testString2 = "my test String2";
+        String testInt = "10";
+        Args args = new Args("b*,c*,d,e#", new String[] {"-b", testString1, "-c", testString2, "-d", "-e", testInt});
+        assertEquals(testString1, args.getString('b'));
+        assertEquals(testString2, args.getString('c'));
+        assertEquals(true, args.getBoolean('d'));
+        assertEquals(Integer.parseInt(testInt), args.getInt('e'));
+    }
 }
