@@ -153,7 +153,7 @@ public class Args {
     private void setStringArg(char argChar, String s) {
         currentArgument++;
         try {
-            stringArgs.get(argChar).setString(args[currentArgument]);
+            stringArgs.get(argChar).set(args[currentArgument]);
         } catch (ArrayIndexOutOfBoundsException e) {
             valid = false;
             errorArgument = argChar;
@@ -225,7 +225,7 @@ public class Args {
 
     public String getString(char c) {
         ArgumentMarshaler am = stringArgs.get(c);
-        return am == null ? "" : am.getString();
+        return am == null ? "" : (String) am.get();
     }
 
     public int getInt(char c) {
@@ -234,25 +234,7 @@ public class Args {
     }
 
     private abstract class ArgumentMarshaler {
-        protected boolean booleanValue = false;
-        private String stringValue;
         private int integerValue;
-
-        public void setBoolean(boolean value) {
-            booleanValue = value;
-        }
-
-        private boolean getBoolean() {
-            return booleanValue;
-        }
-
-        public void setString(String string) {
-            stringValue = string;
-        }
-
-        public String getString() {
-            return stringValue == null ? "" : stringValue;
-        }
 
         public void setInteger(int i) {
             this.integerValue = i;
@@ -268,6 +250,8 @@ public class Args {
     // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
     // Because we couldn't call it.
     private class BooleanArgumentMarshaler extends ArgumentMarshaler {
+        private boolean booleanValue = false;
+
         @Override
         public void set(String s) {
             // This is bad, because s is never parsed....?
@@ -281,14 +265,16 @@ public class Args {
     }
 
     private class StringArgumentMarshaler extends ArgumentMarshaler {
+        private String stringValue;
+
         @Override
         public void set(String s) {
-
+            stringValue = s;
         }
 
         @Override
         public Object get() {
-            return null;
+            return stringValue;
         }
     }
 
