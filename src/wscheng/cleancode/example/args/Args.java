@@ -136,23 +136,17 @@ public class Args {
     private boolean setArgument(char argChar) throws ArgsException {
         boolean set = true;
         ArgumentMarshaler m = marshalers.get(argChar);
-        if (isBoolean(m)) {
-            setBooleanArg(argChar, true);
-        } else if (isString(m)) {
-            // the passing parameter "" is never used, we get the real String Arguments by adding argument counter
-            // in setStringArg()
-            setStringArg(argChar, "");
-        } else if (isInt(m)) {
+        if (m instanceof BooleanArgumentMarshaler) {
+            setBooleanArg(argChar);
+        } else if (m instanceof  StringArgumentMarshaler) {
+            setStringArg(argChar);
+        } else if (m instanceof  IntegerArgumentMarshaler) {
             setIntArg(argChar);
         } else set = false;
         return set;
     }
 
-    private boolean isBoolean(ArgumentMarshaler m) {
-        return m instanceof BooleanArgumentMarshaler;
-    }
-
-    private void setBooleanArg(char argChar, boolean value) {
+    private void setBooleanArg(char argChar) {
         // NPE? won't happen, has already run isBoolean; But, does this violate the law of Demeter?
         try {
             booleanArgs.get(argChar).set("true");
@@ -160,11 +154,7 @@ public class Args {
         }
     }
 
-    private boolean isString(ArgumentMarshaler m) {
-        return m instanceof StringArgumentMarshaler;
-    }
-
-    private void setStringArg(char argChar, String s) throws ArgsException {
+    private void setStringArg(char argChar) throws ArgsException {
         currentArgument++;
         try {
             stringArgs.get(argChar).set(args[currentArgument]);
@@ -174,10 +164,6 @@ public class Args {
             errorCode = ErrorCode.MISSING_STRING;
             throw new ArgsException();
         }
-    }
-
-    private boolean isInt(ArgumentMarshaler m) {
-        return m instanceof IntegerArgumentMarshaler;
     }
 
     private void setIntArg(char argChar) throws ArgsException {
