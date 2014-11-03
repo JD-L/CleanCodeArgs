@@ -143,7 +143,7 @@ public class Args {
 
     private void setBooleanArg(char argChar, boolean value) {
         // NPE? won't happen, has already run isBoolean; But, does this violate the law of Demeter?
-        booleanArgs.get(argChar).setBoolean(value);
+        booleanArgs.get(argChar).set("true");
     }
 
     private boolean isString(char argChar) {
@@ -220,7 +220,7 @@ public class Args {
 
     public boolean getBoolean(char arg) {
         ArgumentMarshaler am = booleanArgs.get(arg);
-        return am != null && am.getBoolean();
+        return am != null && (Boolean)am.get();
     }
 
     public String getString(char c) {
@@ -233,8 +233,8 @@ public class Args {
         return am == null ? 0 : am.getInteger();
     }
 
-    private class ArgumentMarshaler {
-        private boolean booleanValue = false;
+    private abstract class ArgumentMarshaler {
+        protected boolean booleanValue = false;
         private String stringValue;
         private int integerValue;
 
@@ -261,15 +261,46 @@ public class Args {
         public int getInteger() {
             return integerValue;
         }
+
+        public abstract void set(String s);
+        public abstract Object get();
     }
     // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
     // Because we couldn't call it.
     private class BooleanArgumentMarshaler extends ArgumentMarshaler {
+        @Override
+        public void set(String s) {
+            // This is bad, because s is never parsed....?
+            booleanValue = true;
+        }
+
+        @Override
+        public Object get() {
+            return booleanValue;
+        }
     }
 
     private class StringArgumentMarshaler extends ArgumentMarshaler {
+        @Override
+        public void set(String s) {
+
+        }
+
+        @Override
+        public Object get() {
+            return null;
+        }
     }
 
     private class IntegerArgumentMarshaler extends ArgumentMarshaler {
+        @Override
+        public void set(String s) {
+
+        }
+
+        @Override
+        public Object get() {
+            return null;
+        }
     }
 }
