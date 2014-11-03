@@ -9,7 +9,7 @@ public class Args {
     private boolean valid;
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
     private Map<Character, ArgumentMarshaler> booleanArgs = new HashMap<Character, ArgumentMarshaler>();
-    private Map<Character, String> stringArgs = new HashMap<Character, String>();
+    private Map<Character, ArgumentMarshaler> stringArgs = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
     private int currentArgument;
     private char errorArgument = '\0';
@@ -61,14 +61,14 @@ public class Args {
         }
     }
 
+    private boolean isBooleanSchemaElement(String elementTail) {
+        return elementTail.length() == 0;
+    }
+
     private void validateSchemaElementId(char elementId) throws ParseException {
         if (!Character.isLetter(elementId)) {
             throw new ParseException("Bad character:" + elementId + "in Args format: " + schema, 0);
         }
-    }
-
-    private boolean isBooleanSchemaElement(String elementTail) {
-        return elementTail.length() == 0;
     }
 
     private void parseBooleanSchemaElement(char elementId) {
@@ -80,7 +80,7 @@ public class Args {
     }
 
     private void parseStringSchemaElement(char elementId) {
-        stringArgs.put(elementId, "");
+        stringArgs.put(elementId, new StringArgumentMarshaler());
     }
 
     private boolean parseArguments() {
@@ -139,7 +139,7 @@ public class Args {
     private void setStringArg(char argChar, String s) {
         currentArgument++;
         try {
-            stringArgs.put(argChar, args[currentArgument]);
+            stringArgs.get(argChar).setString(args[currentArgument]);
         } catch (ArrayIndexOutOfBoundsException e) {
             valid = false;
             errorArgument = argChar;
@@ -188,11 +188,8 @@ public class Args {
     }
 
     public String getString(char c) {
-        return blankIfNUll(stringArgs.get(c));
-    }
-
-    private String blankIfNUll(String s) {
-        return s == null ? "" : s;
+        ArgumentMarshaler am = stringArgs.get(c);
+        return am == null ? "" : am.getString();
     }
 
     private class ArgumentMarshaler {
@@ -205,6 +202,14 @@ public class Args {
 
         private boolean getBoolean() {
             return booleanValue;
+        }
+
+        public void setString(String string) {
+            stringValue = string;
+        }
+
+        public String getString() {
+            return stringValue == null ? "" : stringValue;
         }
     }
     // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
