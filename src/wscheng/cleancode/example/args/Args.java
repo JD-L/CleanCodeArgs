@@ -222,7 +222,7 @@ public class Args {
     }
 
     public boolean getBoolean(char arg) {
-        ArgumentMarshaler am = booleanArgs.get(arg);
+        ArgumentMarshaler am = marshalers.get(arg);
         return am != null && (Boolean)am.get();
     }
 

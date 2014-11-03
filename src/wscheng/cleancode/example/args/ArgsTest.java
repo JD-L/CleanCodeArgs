@@ -63,4 +63,13 @@ public class ArgsTest extends TestCase {
         assertEquals(true, args.getBoolean('d'));
         assertEquals(Integer.parseInt(testInt), args.getInt('e'));
     }
+
+    public void testGetBooleanFromStringArguments() throws Exception {
+        String testString1 = "my test String1";
+        String testString2 = "my test String2";
+        Args args = new Args("b*,c*,d", new String[] {"-b", testString1, "-c", testString2, "-d"});
+        assertEquals(testString1, args.getString('b'));
+        assertEquals(testString2, args.getString('c'));
+        assertEquals(false, args.getBoolean('c'));
+    }
 }
