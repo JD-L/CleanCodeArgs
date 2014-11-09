@@ -11,6 +11,7 @@ public class Args {
     private Map<Character, ArgumentMarshaler> booleanArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> stringArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> intArgs = new HashMap<Character, ArgumentMarshaler>();
+    private Map<Character, ArgumentMarshaler> marshalers = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
     private int currentArgument;
     private char errorArgument = '\0';
@@ -76,7 +77,9 @@ public class Args {
     }
 
     private void parseBooleanSchemaElement(char elementId) {
-        booleanArgs.put(elementId, new BooleanArgumentMarshaler());
+        ArgumentMarshaler m = new BooleanArgumentMarshaler();
+        marshalers.put(elementId, m);
+        booleanArgs.put(elementId, m);
     }
 
     private boolean isStringSchemaElement(String elementTail) {
@@ -84,7 +87,9 @@ public class Args {
     }
 
     private void parseStringSchemaElement(char elementId) {
-        stringArgs.put(elementId, new StringArgumentMarshaler());
+        ArgumentMarshaler m = new StringArgumentMarshaler();
+        marshalers.put(elementId, m);
+        stringArgs.put(elementId, m);
     }
 
     private boolean isIntSchemaElement(String elementTail) {
@@ -92,7 +97,9 @@ public class Args {
     }
 
     private void parseIntSchemaElement(char elementId) {
-        intArgs.put(elementId, new IntegerArgumentMarshaler());
+        ArgumentMarshaler m = new IntegerArgumentMarshaler();
+        marshalers.put(elementId, m);
+        intArgs.put(elementId, m);
     }
 
     private boolean parseArguments() {
@@ -141,7 +148,8 @@ public class Args {
     }
 
     private boolean isBoolean(char argChar) {
-        return booleanArgs.containsKey(argChar);
+        ArgumentMarshaler m = marshalers.get(argChar);
+        return m instanceof BooleanArgumentMarshaler;
     }
 
     private void setBooleanArg(char argChar, boolean value) {
@@ -153,7 +161,8 @@ public class Args {
     }
 
     private boolean isString(char argChar) {
-        return stringArgs.containsKey(argChar);
+        ArgumentMarshaler m = marshalers.get(argChar);
+        return m instanceof StringArgumentMarshaler;
     }
 
     private void setStringArg(char argChar, String s) throws ArgsException {
@@ -169,7 +178,8 @@ public class Args {
     }
 
     private boolean isInt(char argChar) {
-        return intArgs.containsKey(argChar);
+        ArgumentMarshaler m = marshalers.get(argChar);
+        return m instanceof IntegerArgumentMarshaler;
     }
 
     private void setIntArg(char argChar) throws ArgsException {
