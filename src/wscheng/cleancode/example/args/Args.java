@@ -200,9 +200,8 @@ public class Args {
         }
     }
 
-    private abstract class ArgumentMarshaler {
+    private interface ArgumentMarshaler {
         public abstract void set(Iterator<String> currentArgument) throws ArgsException;
-        public abstract void set(String s) throws ArgsException;
         public abstract Object get();
     }
     // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
@@ -212,12 +211,6 @@ public class Args {
 
         @Override
         public void set(Iterator<String> currentArgument) throws ArgsException {
-            booleanValue = true;
-        }
-
-        @Override
-        public void set(String s) {
-            // This is bad, because s is never parsed....?
             booleanValue = true;
         }
 
@@ -241,11 +234,6 @@ public class Args {
         }
 
         @Override
-        public void set(String s) {
-            stringValue = s;
-        }
-
-        @Override
         public Object get() {
             return stringValue;
         }
@@ -259,23 +247,14 @@ public class Args {
             String parameter = null;
             try {
                 parameter = currentArgument.next();
-                set(parameter);
+                integerValue = Integer.parseInt(parameter);
             } catch (NoSuchElementException e) {
                 errorCode = ErrorCode.MISSING_INTEGER;
                 throw new ArgsException();
-            } catch (ArgsException e) {
+            } catch (NumberFormatException e) {
                 errorParameter = parameter;
                 errorCode = ErrorCode.INVALID_INTEGER;
                 throw e;
-            }
-        }
-
-        @Override
-        public void set(String s) throws ArgsException {
-            try {
-                integerValue = Integer.parseInt(s);
-            } catch (NumberFormatException e) {
-                throw new ArgsException();
             }
         }
 
