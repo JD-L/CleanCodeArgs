@@ -8,7 +8,6 @@ public class Args {
     private String[] args;
     private boolean valid;
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
-    private Map<Character, ArgumentMarshaler> booleanArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> stringArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> intArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> marshalers = new HashMap<Character, ArgumentMarshaler>();
@@ -79,7 +78,6 @@ public class Args {
     private void parseBooleanSchemaElement(char elementId) {
         ArgumentMarshaler m = new BooleanArgumentMarshaler();
         marshalers.put(elementId, m);
-        booleanArgs.put(elementId, m);
     }
 
     private boolean isStringSchemaElement(String elementTail) {
@@ -223,7 +221,11 @@ public class Args {
 
     public boolean getBoolean(char arg) {
         ArgumentMarshaler am = marshalers.get(arg);
-        return am != null && (Boolean)am.get();
+        try {
+            return am != null && (Boolean) am.get();
+        } catch (ClassCastException e) {
+            return false;
+        }
     }
 
     public String getString(char c) {
