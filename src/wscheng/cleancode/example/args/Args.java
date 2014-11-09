@@ -10,12 +10,14 @@ public class Args {
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
     private Map<Character, ArgumentMarshaler> booleanArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> stringArgs = new HashMap<Character, ArgumentMarshaler>();
+    private Map<Character, ArgumentMarshaler> intArgs = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
     private int currentArgument;
     private char errorArgument = '\0';
+    private String errorParameter;
 
     enum ErrorCode {
-        OK, MISSING_STRING
+        OK, MISSING_STRING, INVALID_INTEGER, MISSING_INTEGER
     }
 
     private ErrorCode errorCode = ErrorCode.OK;
@@ -58,6 +60,8 @@ public class Args {
             parseBooleanSchemaElement(elementId);
         } else if (isStringSchemaElement(elementTail)) {
             parseStringSchemaElement(elementId);
+        } else if (isIntSchemaElement(elementTail)) {
+            parseIntSchemaElement(elementId);
         }
     }
 
@@ -81,6 +85,14 @@ public class Args {
 
     private void parseStringSchemaElement(char elementId) {
         stringArgs.put(elementId, new StringArgumentMarshaler());
+    }
+
+    private boolean isIntSchemaElement(String elementTail) {
+        return elementTail.equals("#");
+    }
+
+    private void parseIntSchemaElement(char elementId) {
+        intArgs.put(elementId, new IntegerArgumentMarshaler());
     }
 
     private boolean parseArguments() {
@@ -119,6 +131,8 @@ public class Args {
             // the passing parameter "" is never used, we get the real String Arguments by adding argument counter
             // in setStringArg()
             setStringArg(argChar, "");
+        } else if (isInt(argChar)) {
+            setIntArg(argChar);
         } else set = false;
         return set;
     }
@@ -144,6 +158,28 @@ public class Args {
             valid = false;
             errorArgument = argChar;
             errorCode = ErrorCode.MISSING_STRING;
+        }
+    }
+
+    private boolean isInt(char argChar) {
+        return intArgs.containsKey(argChar);
+    }
+
+    private void setIntArg(char argChar) {
+        currentArgument++;
+        String parameter = null;
+        try {
+            parameter = args[currentArgument];
+            intArgs.get(argChar).setInteger(Integer.parseInt(parameter));
+        } catch (ArrayIndexOutOfBoundsException e) {
+            valid = false;
+            errorArgument = argChar;
+            errorCode = ErrorCode.MISSING_INTEGER;
+        } catch(NumberFormatException e) {
+            valid = false;
+            errorArgument = argChar;
+            errorParameter = parameter;
+            errorCode = ErrorCode.INVALID_INTEGER;
         }
     }
 
@@ -192,9 +228,15 @@ public class Args {
         return am == null ? "" : am.getString();
     }
 
+    public int getInt(char c) {
+        ArgumentMarshaler am = intArgs.get(c);
+        return am == null ? 0 : am.getInteger();
+    }
+
     private class ArgumentMarshaler {
         private boolean booleanValue = false;
         private String stringValue;
+        private int integerValue;
 
         public void setBoolean(boolean value) {
             booleanValue = value;
@@ -210,6 +252,14 @@ public class Args {
 
         public String getString() {
             return stringValue == null ? "" : stringValue;
+        }
+
+        public void setInteger(int i) {
+            this.integerValue = i;
+        }
+
+        public int getInteger() {
+            return integerValue;
         }
     }
     // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
