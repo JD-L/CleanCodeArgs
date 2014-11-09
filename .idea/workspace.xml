@@ -26,12 +26,14 @@
       <file leaf-file-name="Args.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/wscheng/cleancode/example/args/Args.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.16630197" vertical-offset="2071" max-vertical-offset="5377">
-              <caret line="121" column="24" selection-start-line="121" selection-start-column="24" selection-end-line="121" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.33479214" vertical-offset="2127" max-vertical-offset="5491">
+              <caret line="128" column="32" selection-start-line="128" selection-start-column="32" selection-end-line="128" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#256#267#0" expanded="true" />
                 <element signature="e#341#371#0" expanded="true" />
+                <element signature="e#5234#5235#0" expanded="true" />
+                <element signature="e#5273#5274#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -40,7 +42,7 @@
       <file leaf-file-name="ArgsTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/wscheng/cleancode/example/args/ArgsTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1520">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1034" max-vertical-offset="1520">
               <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
               <folding />
             </state>
@@ -185,6 +187,8 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
     <property name="dynamic.classpath" value="false" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
@@ -531,6 +535,8 @@
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
             <element signature="e#341#371#0" expanded="true" />
+            <element signature="e#5234#5235#0" expanded="true" />
+            <element signature="e#5273#5274#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -559,6 +565,8 @@
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
             <element signature="e#341#371#0" expanded="true" />
+            <element signature="e#5234#5235#0" expanded="true" />
+            <element signature="e#5273#5274#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -587,6 +595,8 @@
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
             <element signature="e#341#371#0" expanded="true" />
+            <element signature="e#5234#5235#0" expanded="true" />
+            <element signature="e#5273#5274#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -615,6 +625,8 @@
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
             <element signature="e#341#371#0" expanded="true" />
+            <element signature="e#5234#5235#0" expanded="true" />
+            <element signature="e#5273#5274#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -643,6 +655,8 @@
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
             <element signature="e#341#371#0" expanded="true" />
+            <element signature="e#5234#5235#0" expanded="true" />
+            <element signature="e#5273#5274#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -671,6 +685,8 @@
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
             <element signature="e#341#371#0" expanded="true" />
+            <element signature="e#5234#5235#0" expanded="true" />
+            <element signature="e#5273#5274#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -709,7 +725,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wscheng/cleancode/example/args/ArgsTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1520">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1034" max-vertical-offset="1520">
           <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
           <folding />
         </state>
@@ -717,12 +733,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wscheng/cleancode/example/args/Args.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16630197" vertical-offset="2071" max-vertical-offset="5377">
-          <caret line="121" column="24" selection-start-line="121" selection-start-column="24" selection-end-line="121" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.33479214" vertical-offset="2127" max-vertical-offset="5491">
+          <caret line="128" column="32" selection-start-line="128" selection-start-column="32" selection-end-line="128" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
             <element signature="e#341#371#0" expanded="true" />
+            <element signature="e#5234#5235#0" expanded="true" />
+            <element signature="e#5273#5274#0" expanded="true" />
           </folding>
         </state>
       </provider>

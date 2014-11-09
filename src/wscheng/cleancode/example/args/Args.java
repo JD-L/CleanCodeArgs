@@ -124,7 +124,7 @@ public class Args {
         }
         try {
             if (m instanceof BooleanArgumentMarshaler) {
-                setBooleanArg(m);
+                m.set(currentArgument);
             } else if (m instanceof StringArgumentMarshaler) {
                 setStringArg(m);
             } else if (m instanceof IntegerArgumentMarshaler) {
@@ -136,14 +136,6 @@ public class Args {
             throw e;
         }
         return true;
-    }
-
-    private void setBooleanArg(ArgumentMarshaler m) {
-        // NPE? won't happen, has already run isBoolean; But, does this violate the law of Demeter?
-        try {
-            m.set("true");
-        } catch (ArgsException e) {
-        }
     }
 
     private void setStringArg(ArgumentMarshaler m) throws ArgsException {
@@ -239,6 +231,7 @@ public class Args {
     }
 
     private abstract class ArgumentMarshaler {
+        public abstract void set(Iterator<String> currentArgument) throws ArgsException;
         public abstract void set(String s) throws ArgsException;
         public abstract Object get();
     }
@@ -246,6 +239,11 @@ public class Args {
     // Because we couldn't call it.
     private class BooleanArgumentMarshaler extends ArgumentMarshaler {
         private boolean booleanValue = false;
+
+        @Override
+        public void set(Iterator<String> currentArgument) throws ArgsException {
+            booleanValue = true;
+        }
 
         @Override
         public void set(String s) {
@@ -263,6 +261,10 @@ public class Args {
         private String stringValue;
 
         @Override
+        public void set(Iterator<String> currentArgument) throws ArgsException {
+        }
+
+        @Override
         public void set(String s) {
             stringValue = s;
         }
@@ -275,6 +277,10 @@ public class Args {
 
     private class IntegerArgumentMarshaler extends ArgumentMarshaler {
         private int integerValue = 0;
+
+        @Override
+        public void set(Iterator<String> currentArgument) throws ArgsException {
+        }
 
         @Override
         public void set(String s) throws ArgsException {
