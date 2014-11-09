@@ -8,8 +8,6 @@ public class Args {
     private String[] args;
     private boolean valid;
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
-    private Map<Character, ArgumentMarshaler> stringArgs = new HashMap<Character, ArgumentMarshaler>();
-    private Map<Character, ArgumentMarshaler> intArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> marshalers = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
     private int currentArgument;
@@ -87,7 +85,6 @@ public class Args {
     private void parseStringSchemaElement(char elementId) {
         ArgumentMarshaler m = new StringArgumentMarshaler();
         marshalers.put(elementId, m);
-        stringArgs.put(elementId, m);
     }
 
     private boolean isIntSchemaElement(String elementTail) {
@@ -97,7 +94,6 @@ public class Args {
     private void parseIntSchemaElement(char elementId) {
         ArgumentMarshaler m = new IntegerArgumentMarshaler();
         marshalers.put(elementId, m);
-        intArgs.put(elementId, m);
     }
 
     private boolean parseArguments() {
@@ -229,13 +225,21 @@ public class Args {
     }
 
     public String getString(char c) {
-        ArgumentMarshaler am = stringArgs.get(c);
-        return am == null ? "" : (String) am.get();
+        ArgumentMarshaler am = marshalers.get(c);
+        try {
+            return am == null ? "" : (String) am.get();
+        } catch (ClassCastException e) {
+            return "";
+        }
     }
 
     public int getInt(char c) {
-        ArgumentMarshaler am = intArgs.get(c);
-        return am == null ? 0 : (Integer) am.get();
+        ArgumentMarshaler am = marshalers.get(c);
+        try {
+            return am == null ? 0 : (Integer) am.get();
+        } catch (ClassCastException e) {
+            return 0;
+        }
     }
 
     private abstract class ArgumentMarshaler {
