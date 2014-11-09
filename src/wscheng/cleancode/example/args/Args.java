@@ -118,22 +118,24 @@ public class Args {
     }
 
     private boolean setArgument(char argChar) throws ArgsException {
-        boolean set = true;
+        ArgumentMarshaler m = marshalers.get(argChar);
+        if (m == null) {
+            return false;
+        }
         try {
-            ArgumentMarshaler m = marshalers.get(argChar);
             if (m instanceof BooleanArgumentMarshaler) {
                 setBooleanArg(m);
             } else if (m instanceof StringArgumentMarshaler) {
                 setStringArg(m);
             } else if (m instanceof IntegerArgumentMarshaler) {
                 setIntArg(m);
-            } else set = false;
+            }
         } catch (ArgsException e) {
             valid = false;
             errorArgument = argChar;
             throw e;
         }
-        return set;
+        return true;
     }
 
     private void setBooleanArg(ArgumentMarshaler m) {
