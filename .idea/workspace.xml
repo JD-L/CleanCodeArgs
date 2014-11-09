@@ -26,11 +26,12 @@
       <file leaf-file-name="Args.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/wscheng/cleancode/example/args/Args.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5404814" vertical-offset="456" max-vertical-offset="5358">
-              <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.29102844" vertical-offset="475" max-vertical-offset="5339">
+              <caret line="34" column="49" selection-start-line="34" selection-start-column="49" selection-end-line="34" selection-end-column="49" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#256#267#0" expanded="true" />
+                <element signature="e#341#371#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -40,7 +41,7 @@
         <entry file="file://$PROJECT_DIR$/src/wscheng/cleancode/example/args/ArgsTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1520">
-              <caret line="15" column="36" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
+              <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -165,8 +166,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -529,6 +530,7 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
+            <element signature="e#341#371#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -556,6 +558,7 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
+            <element signature="e#341#371#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -583,6 +586,7 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
+            <element signature="e#341#371#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -610,6 +614,7 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
+            <element signature="e#341#371#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -637,6 +642,7 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
+            <element signature="e#341#371#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -664,6 +670,7 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
+            <element signature="e#341#371#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -703,18 +710,19 @@
     <entry file="file://$PROJECT_DIR$/src/wscheng/cleancode/example/args/ArgsTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1520">
-          <caret line="15" column="36" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
+          <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wscheng/cleancode/example/args/Args.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5404814" vertical-offset="456" max-vertical-offset="5358">
-          <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.29102844" vertical-offset="475" max-vertical-offset="5339">
+          <caret line="34" column="49" selection-start-line="34" selection-start-column="49" selection-end-line="34" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#267#0" expanded="true" />
+            <element signature="e#341#371#0" expanded="true" />
           </folding>
         </state>
       </provider>
