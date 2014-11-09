@@ -123,43 +123,13 @@ public class Args {
             return false;
         }
         try {
-            if (m instanceof BooleanArgumentMarshaler) {
-                m.set(currentArgument);
-            } else if (m instanceof StringArgumentMarshaler) {
-                setStringArg(m);
-            } else if (m instanceof IntegerArgumentMarshaler) {
-                setIntArg(m);
-            }
+            m.set(currentArgument);
         } catch (ArgsException e) {
             valid = false;
             errorArgument = argChar;
             throw e;
         }
         return true;
-    }
-
-    private void setStringArg(ArgumentMarshaler m) throws ArgsException {
-        try {
-            m.set(currentArgument.next());
-        } catch (NoSuchElementException e) {
-             errorCode = ErrorCode.MISSING_STRING;
-            throw new ArgsException();
-        }
-    }
-
-    private void setIntArg(ArgumentMarshaler m) throws ArgsException {
-        String parameter = null;
-        try {
-            parameter = currentArgument.next();
-            m.set(parameter);
-        } catch (NoSuchElementException e) {
-            errorCode = ErrorCode.MISSING_INTEGER;
-            throw new ArgsException();
-        } catch (ArgsException e) {
-            errorParameter = parameter;
-            errorCode = ErrorCode.INVALID_INTEGER;
-            throw e;
-        }
     }
 
     public int cardinality() {
@@ -262,6 +232,12 @@ public class Args {
 
         @Override
         public void set(Iterator<String> currentArgument) throws ArgsException {
+            try {
+                stringValue = currentArgument.next();
+            } catch (NoSuchElementException e) {
+                errorCode = ErrorCode.MISSING_STRING;
+                throw new ArgsException();
+            }
         }
 
         @Override
@@ -280,6 +256,18 @@ public class Args {
 
         @Override
         public void set(Iterator<String> currentArgument) throws ArgsException {
+            String parameter = null;
+            try {
+                parameter = currentArgument.next();
+                set(parameter);
+            } catch (NoSuchElementException e) {
+                errorCode = ErrorCode.MISSING_INTEGER;
+                throw new ArgsException();
+            } catch (ArgsException e) {
+                errorParameter = parameter;
+                errorCode = ErrorCode.INVALID_INTEGER;
+                throw e;
+            }
         }
 
         @Override
