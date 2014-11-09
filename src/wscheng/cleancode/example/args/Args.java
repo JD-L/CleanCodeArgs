@@ -98,24 +98,27 @@ public class Args {
     private boolean parseArguments() {
         for (currentArgument = 0; currentArgument < args.length; currentArgument++) {
             String arg = args[currentArgument];
-            parseArgument(arg);
+            try {
+                parseArgument(arg);
+            } catch (ArgsException e) {
+            }
         }
         return true;
     }
 
-    private void parseArgument(String arg) {
+    private void parseArgument(String arg) throws ArgsException {
         if (arg.startsWith("-")) {
             parseElements(arg);
         }
     }
 
-    private void parseElements(String arg) {
+    private void parseElements(String arg) throws ArgsException {
         for (int i = 1; i < arg.length(); i++) {
             parseElement(arg.charAt(i));
         }
     }
 
-    private void parseElement(char argChar) {
+    private void parseElement(char argChar) throws ArgsException {
         if (setArgument(argChar)) {
             argsFound.add(argChar);
         } else {
@@ -123,7 +126,7 @@ public class Args {
         }
     }
 
-    private boolean setArgument(char argChar) {
+    private boolean setArgument(char argChar) throws ArgsException {
         boolean set = true;
         if (isBoolean(argChar)) {
             setBooleanArg(argChar, true);
@@ -143,14 +146,17 @@ public class Args {
 
     private void setBooleanArg(char argChar, boolean value) {
         // NPE? won't happen, has already run isBoolean; But, does this violate the law of Demeter?
-        booleanArgs.get(argChar).set("true");
+        try {
+            booleanArgs.get(argChar).set("true");
+        } catch (ArgsException e) {
+        }
     }
 
     private boolean isString(char argChar) {
         return stringArgs.containsKey(argChar);
     }
 
-    private void setStringArg(char argChar, String s) {
+    private void setStringArg(char argChar, String s) throws ArgsException {
         currentArgument++;
         try {
             stringArgs.get(argChar).set(args[currentArgument]);
@@ -158,6 +164,7 @@ public class Args {
             valid = false;
             errorArgument = argChar;
             errorCode = ErrorCode.MISSING_STRING;
+            throw new ArgsException();
         }
     }
 
@@ -165,21 +172,23 @@ public class Args {
         return intArgs.containsKey(argChar);
     }
 
-    private void setIntArg(char argChar) {
+    private void setIntArg(char argChar) throws ArgsException {
         currentArgument++;
         String parameter = null;
         try {
             parameter = args[currentArgument];
-            intArgs.get(argChar).setInteger(Integer.parseInt(parameter));
+            intArgs.get(argChar).set(parameter);
         } catch (ArrayIndexOutOfBoundsException e) {
             valid = false;
             errorArgument = argChar;
             errorCode = ErrorCode.MISSING_INTEGER;
-        } catch(NumberFormatException e) {
+            throw new ArgsException();
+        } catch (ArgsException e) {
             valid = false;
             errorArgument = argChar;
             errorParameter = parameter;
             errorCode = ErrorCode.INVALID_INTEGER;
+            throw e;
         }
     }
 
@@ -230,21 +239,11 @@ public class Args {
 
     public int getInt(char c) {
         ArgumentMarshaler am = intArgs.get(c);
-        return am == null ? 0 : am.getInteger();
+        return am == null ? 0 : (Integer) am.get();
     }
 
     private abstract class ArgumentMarshaler {
-        private int integerValue;
-
-        public void setInteger(int i) {
-            this.integerValue = i;
-        }
-
-        public int getInteger() {
-            return integerValue;
-        }
-
-        public abstract void set(String s);
+        public abstract void set(String s) throws ArgsException;
         public abstract Object get();
     }
     // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
@@ -279,14 +278,23 @@ public class Args {
     }
 
     private class IntegerArgumentMarshaler extends ArgumentMarshaler {
-        @Override
-        public void set(String s) {
+        private int integerValue = 0;
 
+        @Override
+        public void set(String s) throws ArgsException {
+            try {
+                integerValue = Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                throw new ArgsException();
+            }
         }
 
         @Override
         public Object get() {
-            return null;
+            return integerValue;
         }
+    }
+    private class ArgsException extends Exception {
+
     }
 }
