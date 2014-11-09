@@ -135,14 +135,20 @@ public class Args {
 
     private boolean setArgument(char argChar) throws ArgsException {
         boolean set = true;
-        ArgumentMarshaler m = marshalers.get(argChar);
-        if (m instanceof BooleanArgumentMarshaler) {
-            setBooleanArg(m);
-        } else if (m instanceof  StringArgumentMarshaler) {
-            setStringArg(m);
-        } else if (m instanceof  IntegerArgumentMarshaler) {
-            setIntArg(m);
-        } else set = false;
+        try {
+            ArgumentMarshaler m = marshalers.get(argChar);
+            if (m instanceof BooleanArgumentMarshaler) {
+                setBooleanArg(m);
+            } else if (m instanceof StringArgumentMarshaler) {
+                setStringArg(m);
+            } else if (m instanceof IntegerArgumentMarshaler) {
+                setIntArg(m);
+            } else set = false;
+        } catch (ArgsException e) {
+            valid = false;
+            errorArgument = argChar;
+            throw e;
+        }
         return set;
     }
 
@@ -159,10 +165,7 @@ public class Args {
         try {
             m.set(args[currentArgument]);
         } catch (ArrayIndexOutOfBoundsException e) {
-            valid = false;
-            // No argChar in parameter; thus, should move this up
-            // errorArgument = argChar;
-            errorCode = ErrorCode.MISSING_STRING;
+             errorCode = ErrorCode.MISSING_STRING;
             throw new ArgsException();
         }
     }
@@ -174,15 +177,9 @@ public class Args {
             parameter = args[currentArgument];
             m.set(parameter);
         } catch (ArrayIndexOutOfBoundsException e) {
-            valid = false;
-            // No argChar in parameter; thus, should move this up
-            // errorArgument = argChar;
             errorCode = ErrorCode.MISSING_INTEGER;
             throw new ArgsException();
         } catch (ArgsException e) {
-            valid = false;
-            // No argChar in parameter; thus, should move this up
-            // errorArgument = argChar;
             errorParameter = parameter;
             errorCode = ErrorCode.INVALID_INTEGER;
             throw e;
