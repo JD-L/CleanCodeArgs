@@ -158,7 +158,11 @@ public class Args {
                 case INVALID_INTEGER:
                     return String.format("Argument -%c expects an integer but was '%s'.", errorArgument, errorParameter);
                 case MISSING_INTEGER:
-                    return String.format("Could not find string parameter for -%c.", errorArgument);
+                    return String.format("Could not find integer parameter for -%c.", errorArgument);
+                case INVALID_DOUBLE:
+                    return String.format("Argument -%c expects a double but was '%s'.", errorArgument, errorParameter);
+                case MISSING_DOUBLE:
+                    return String.format("Could not find double parameter for -%c.", errorArgument);
                 case OK:
                     throw new Exception("TILT: Should not get here.");
             }
@@ -269,7 +273,7 @@ public class Args {
             } catch (NumberFormatException e) {
                 errorParameter = parameter;
                 errorCode = ErrorCode.INVALID_INTEGER;
-                throw e;
+                throw new ArgsException();
             }
         }
 
@@ -294,7 +298,7 @@ public class Args {
             } catch (NumberFormatException e) {
                 errorParameter = parameter;
                 errorCode = ErrorCode.INVALID_DOUBLE;
-                throw e;
+                throw new ArgsException();
             }
         }
 
