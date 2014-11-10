@@ -72,4 +72,12 @@ public class ArgsTest extends TestCase {
         assertEquals(testString2, args.getString('c'));
         assertEquals(false, args.getBoolean('c'));
     }
+
+    public void testSimpleDoublePresent() throws Exception {
+        Args args = new Args("x##", new String[] {"-x", "44.4"});
+        assertTrue(args.isValid());
+        assertEquals(1, args.cardinality());
+        assertTrue(args.has('x'));
+        assertEquals(44.4, args.getDouble('x'), .001);
+    }
 }
