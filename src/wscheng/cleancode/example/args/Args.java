@@ -206,7 +206,7 @@ public class Args {
     }
     // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
     // Because we couldn't call it.
-    private class BooleanArgumentMarshaler extends ArgumentMarshaler {
+    private class BooleanArgumentMarshaler implements ArgumentMarshaler {
         private boolean booleanValue = false;
 
         @Override
@@ -220,7 +220,7 @@ public class Args {
         }
     }
 
-    private class StringArgumentMarshaler extends ArgumentMarshaler {
+    private class StringArgumentMarshaler implements ArgumentMarshaler {
         private String stringValue;
 
         @Override
@@ -239,7 +239,7 @@ public class Args {
         }
     }
 
-    private class IntegerArgumentMarshaler extends ArgumentMarshaler {
+    private class IntegerArgumentMarshaler implements ArgumentMarshaler {
         private int integerValue = 0;
 
         @Override
