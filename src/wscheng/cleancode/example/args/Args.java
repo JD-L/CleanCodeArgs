@@ -8,10 +8,6 @@ public class Args {
     private Map<Character, ArgumentMarshaler> marshalers = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
     private Iterator<String> currentArgument;
-    //
-    private char errorArgument = '\0';
-    private String errorParameter;
-    private ArgsException.ErrorCode errorCode = ArgsException.ErrorCode.OK;
 
     public Args(String schema, String[] args) throws ArgsException {
         this.schema = schema;
@@ -115,125 +111,22 @@ public class Args {
     }
 
     public boolean getBoolean(char arg) {
-        ArgumentMarshaler am = marshalers.get(arg);
-        try {
-            return am != null && (Boolean) am.get();
-        } catch (ClassCastException e) {
-            return false;
-        }
+        return BooleanArgumentMarshaler.getValue(marshalers.get(arg));
     }
 
     public String getString(char c) {
-        ArgumentMarshaler am = marshalers.get(c);
-        try {
-            return am == null ? "" : (String) am.get();
-        } catch (ClassCastException e) {
-            return "";
-        }
+        return StringArgumentMarshaler.getValue(marshalers.get(c));
     }
 
     public int getInt(char c) {
-        ArgumentMarshaler am = marshalers.get(c);
-        try {
-            return am == null ? 0 : (Integer) am.get();
-        } catch (ClassCastException e) {
-            return 0;
-        }
+        return IntegerArgumentMarshaler.getValue(marshalers.get(c));
     }
 
     public double getDouble(char c) {
-        ArgumentMarshaler am = marshalers.get(c);
-        try {
-            return am == null ? 0 : (Double) am.get();
-        } catch (ClassCastException e) {
-            return 0;
-        }
+        return DoubleArgumentMarshaler.getValue(marshalers.get(c));
     }
 
     public boolean has(char c) {
         return argsFound.contains(c);
     }
-
-    private interface ArgumentMarshaler {
-        public abstract void set(Iterator<String> currentArgument) throws ArgsException;
-        public abstract Object get();
-    }
-    // BooleanArgumentMarshaler is declare private in ArgumentMarshaler in the book, and this is wrong.
-    // Because we couldn't call it.
-    private class BooleanArgumentMarshaler implements ArgumentMarshaler {
-        private boolean booleanValue = false;
-
-        @Override
-        public void set(Iterator<String> currentArgument) throws ArgsException {
-            booleanValue = true;
-        }
-
-        @Override
-        public Object get() {
-            return booleanValue;
-        }
-    }
-
-    private class StringArgumentMarshaler implements ArgumentMarshaler {
-        private String stringValue;
-
-        @Override
-        public void set(Iterator<String> currentArgument) throws ArgsException {
-            try {
-                stringValue = currentArgument.next();
-            } catch (NoSuchElementException e) {
-                throw new ArgsException(ArgsException.ErrorCode.MISSING_STRING);
-            }
-        }
-
-        @Override
-        public Object get() {
-            return stringValue;
-        }
-    }
-
-    private class IntegerArgumentMarshaler implements ArgumentMarshaler {
-        private int integerValue = 0;
-
-        @Override
-        public void set(Iterator<String> currentArgument) throws ArgsException {
-            String parameter = null;
-            try {
-                parameter = currentArgument.next();
-                integerValue = Integer.parseInt(parameter);
-            } catch (NoSuchElementException e) {
-                throw new ArgsException(ArgsException.ErrorCode.MISSING_INTEGER);
-            } catch (NumberFormatException e) {
-                throw new ArgsException(ArgsException.ErrorCode.INVALID_INTEGER, parameter);
-            }
-        }
-
-        @Override
-        public Object get() {
-            return integerValue;
-        }
-    }
-
-    private class DoubleArgumentMarshaler implements ArgumentMarshaler {
-        private double doubleValue = 0;
-
-        @Override
-        public void set(Iterator<String> currentArgument) throws ArgsException {
-            String parameter = null;
-            try {
-                parameter = currentArgument.next();
-                doubleValue = Double.parseDouble(parameter);
-            } catch (NoSuchElementException e) {
-                throw new ArgsException(ArgsException.ErrorCode.MISSING_DOUBLE);
-            } catch (NumberFormatException e) {
-                throw new ArgsException(ArgsException.ErrorCode.INVALID_DOUBLE, parameter);
-            }
-        }
-
-        @Override
-        public Object get() {
-            return doubleValue;
-        }
-    }
-
 }
