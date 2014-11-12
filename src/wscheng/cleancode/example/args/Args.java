@@ -14,14 +14,9 @@ public class Args {
     //
     private char errorArgument = '\0';
     private String errorParameter;
+    private ArgsException.ErrorCode errorCode = ArgsException.ErrorCode.OK;
 
-    enum ErrorCode {
-        OK, MISSING_STRING, INVALID_INTEGER, MISSING_INTEGER, UNEXPECTED_ARGUMENT, MISSING_DOUBLE, INVALID_DOUBLE
-    }
-
-    private ErrorCode errorCode = ErrorCode.OK;
-
-    public Args(String schema, String[] args) throws ParseException {
+    public Args(String schema, String[] args) throws ArgsException {
         this.schema = schema;
         this.argsList = Arrays.asList(args);
         valid = parse();
@@ -31,7 +26,7 @@ public class Args {
         return valid;
     }
 
-    public boolean parse() throws ParseException {
+    public boolean parse() throws ArgsException {
         if (schema.length() == 0 && argsList.size() == 0) {
             return true;
         }
@@ -43,7 +38,7 @@ public class Args {
         return valid;
     }
 
-    private boolean parseSchema() throws ParseException {
+    private boolean parseSchema() throws ArgsException {
         for (String element : schema.split(",")) {
             if (element.length() > 0) {
                 String trimmedElement = element.trim();
@@ -53,7 +48,7 @@ public class Args {
         return true;
     }
 
-    private void parseSchemaElement(String element) throws ParseException {
+    private void parseSchemaElement(String element) throws ArgsException {
         char elementId = element.charAt(0);
         String elementTail = element.substring(1);
         validateSchemaElementId(elementId);
@@ -67,13 +62,13 @@ public class Args {
         } else if (elementTail.equals("##")) {
             marshalers.put(elementId, new DoubleArgumentMarshaler());
         } else {
-            throw new ParseException(String.format("Argument: %c has invalid format: %s", elementId, elementTail), 0);
+            throw new ArgsException(String.format("Argument: %c has invalid format: %s", elementId, elementTail));
         }
     }
 
-    private void validateSchemaElementId(char elementId) throws ParseException {
+    private void validateSchemaElementId(char elementId) throws ArgsException {
         if (!Character.isLetter(elementId)) {
-            throw new ParseException("Bad character:" + elementId + "in Args format: " + schema, 0);
+            throw new ArgsException("Bad character:" + elementId + "in Args format: " + schema);
         }
     }
 
@@ -114,7 +109,7 @@ public class Args {
             argsFound.add(argChar);
         } else {
             unexpectedArguments.add(argChar);
-            errorCode = ErrorCode.UNEXPECTED_ARGUMENT;
+            errorCode = ArgsException.ErrorCode.UNEXPECTED_ARGUMENT;
             valid = false;
         }
     }
@@ -247,7 +242,7 @@ public class Args {
             try {
                 stringValue = currentArgument.next();
             } catch (NoSuchElementException e) {
-                errorCode = ErrorCode.MISSING_STRING;
+                errorCode = ArgsException.ErrorCode.MISSING_STRING;
                 throw new ArgsException();
             }
         }
@@ -268,11 +263,11 @@ public class Args {
                 parameter = currentArgument.next();
                 integerValue = Integer.parseInt(parameter);
             } catch (NoSuchElementException e) {
-                errorCode = ErrorCode.MISSING_INTEGER;
+                errorCode = ArgsException.ErrorCode.MISSING_INTEGER;
                 throw new ArgsException();
             } catch (NumberFormatException e) {
                 errorParameter = parameter;
-                errorCode = ErrorCode.INVALID_INTEGER;
+                errorCode = ArgsException.ErrorCode.INVALID_INTEGER;
                 throw new ArgsException();
             }
         }
@@ -293,11 +288,11 @@ public class Args {
                 parameter = currentArgument.next();
                 doubleValue = Double.parseDouble(parameter);
             } catch (NoSuchElementException e) {
-                errorCode = ErrorCode.MISSING_DOUBLE;
+                errorCode = ArgsException.ErrorCode.MISSING_DOUBLE;
                 throw new ArgsException();
             } catch (NumberFormatException e) {
                 errorParameter = parameter;
-                errorCode = ErrorCode.INVALID_DOUBLE;
+                errorCode = ArgsException.ErrorCode.INVALID_DOUBLE;
                 throw new ArgsException();
             }
         }
@@ -308,7 +303,4 @@ public class Args {
         }
     }
 
-    private class ArgsException extends Exception {
-
-    }
 }
